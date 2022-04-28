@@ -29,20 +29,27 @@ public class ListaPersonagemActivity extends AppCompatActivity
     private final PersonagemDAO dao = new PersonagemDAO();
     private ArrayAdapter<Personagem> adapter;
 
+    /*
+        Faz o setup da activity.
+    */
     @Override
     protected void onCreate(@Nullable Bundle savedInstance)
     {
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_lista_personagem);
-        setTitle(TITULO_APPBAR);
-        configuraFabNovoPersonagem();
-        configuraLista();
+        setContentView(R.layout.activity_lista_personagem); // Põe a página XML na tela.
+        setTitle(TITULO_APPBAR); // Define título na barra superior.
+        configuraFabNovoPersonagem(); // Define função do floatingActionButton.
+        configuraLista(); // Preenche lista e habilita context menu.
     }
 
+    /*
+        Define função do floatingActionButton criado no XML:
+        Roda o método 'abreFormulario'
+    */
     private void configuraFabNovoPersonagem()
     {
-        FloatingActionButton botaoNovoPersonagem = findViewById(R.id.fab_add);
-        botaoNovoPersonagem.setOnClickListener
+        FloatingActionButton botaoNovoPersonagem = findViewById(R.id.fab_add); // Pega referência ao botão no XML.
+        botaoNovoPersonagem.setOnClickListener // Define função que o botão deve rodar quando pressionado.
         (
             new View.OnClickListener()
             {
@@ -55,11 +62,17 @@ public class ListaPersonagemActivity extends AppCompatActivity
         );
     }
 
+    /*
+        Abre a tela de formulário pra registro de personagem.
+    */
     private void abreFormulario()
     {
         startActivity(new Intent(this, FormularioPersonagemActivity.class));
     }
 
+    /*
+        Atualiza lista de personagens quando entra novamente nessa activity.
+    */
     @Override
     protected void onResume()
     {
@@ -67,18 +80,27 @@ public class ListaPersonagemActivity extends AppCompatActivity
         atualizaPersonagem();
     }
 
+    /*
+        Atualiza lista de personagens.
+    */
     private void atualizaPersonagem()
     {
         adapter.clear();
         adapter.addAll(dao.todos());
     }
 
+    /*
+        Deleta personagem do registro o remove da lista.
+    */
     private void remove(Personagem personagem)
     {
         dao.remove(personagem);
         adapter.remove(personagem);
     }
 
+    /*
+        Cria o context menu para deletar personagem.
+    */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo)
     {
@@ -86,42 +108,60 @@ public class ListaPersonagemActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.activity_lista_personagem_menu, menu);
     }
 
+    /*
+        Define funcionamento do contextMenu.
+    */
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item)
     {
         int itemId = item.getItemId();
-        if(itemId == R.id.activity_lista_personagem_menu_remover)
+        if(itemId == R.id.activity_lista_personagem_menu_remover) // Ao clicar no botão de remover personagem
         {
+            /*
+                Coloca menu de alerta na tela pedindo que o usuário confirme
+                se deseja mesmo deletar o personagem.
+                Cria os botões para confirmar ou não e define suas funções.
+            */
             new AlertDialog.Builder(this)
                     .setTitle("Removendo Personagem")
                     .setMessage("Tem certeza que quer remover?")
                     .setPositiveButton
                     (
-                    "Sim", new DialogInterface.OnClickListener()
+                    "Sim", new DialogInterface.OnClickListener() // Define função do botão.
                         {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i)
                             {
+                                /*
+                                    Pega referência ao personagem selecionado na lista.
+                                    Roda o método para remover o personagem selecionado.
+                                */
                                 AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                                 Personagem personagemEscolhido = adapter.getItem(menuInfo.position);
                                 remove(personagemEscolhido);
                             }
                         }
                     )
-                    .setNegativeButton("Não", null)
+                    .setNegativeButton("Não", null) // Botão negativo não executa nenhuma função.
                     .show();
         }
         return super.onContextItemSelected(item);
     }
 
+    /*
+        Setup da lista.
+    */
     private void configuraLista()
     {
-        ListView listaDePersonagens = findViewById(R.id.activity_main_lista_personagem);
-        configuraAdapter(listaDePersonagens);
-        configuraItemPorClique(listaDePersonagens);
-        registerForContextMenu(listaDePersonagens);
+        ListView listaDePersonagens = findViewById(R.id.activity_main_lista_personagem); // Pega referência à lista no XML.
+        configuraAdapter(listaDePersonagens); // Define como são mostrados itens da lista. (?)
+        configuraItemPorClique(listaDePersonagens); // Define função ao clicar em item na lista.
+        registerForContextMenu(listaDePersonagens); // Habilita context menu ao selecionar item da lista.
     }
 
+    /*
+        Define função a ser executada quando usuário clicar num item da lista.
+    */
     private void configuraItemPorClique(ListView listaDePersonagens)
     {
         listaDePersonagens.setOnItemClickListener
@@ -138,6 +178,10 @@ public class ListaPersonagemActivity extends AppCompatActivity
         );
     }
 
+    /*
+        Abre a tela pra registro de personagem.
+        Passa o personagem selecionado para atualizar registro.
+    */
     private void abreFormularioEditar(Personagem personagemEscolhido)
     {
         Intent vaiParaFormulario = new Intent(ListaPersonagemActivity.this, FormularioPersonagemActivity.class);
@@ -145,6 +189,9 @@ public class ListaPersonagemActivity extends AppCompatActivity
         startActivity(vaiParaFormulario);
     }
 
+    /*
+        Adapter define como serão apresentados os itens na lista. (?)
+    */
     private void configuraAdapter(ListView listaDePersonagens)
     {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

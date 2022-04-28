@@ -27,6 +27,9 @@ public class FormularioPersonagemActivity extends AppCompatActivity
     private final PersonagemDAO dao = new PersonagemDAO();
     private Personagem personagem;
 
+    /*
+        Cria menu para salvar personagem.
+    */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -34,6 +37,9 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    /*
+        Define função do botão no menu para finalizar o formulário.
+    */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
@@ -45,6 +51,9 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+        Faz o setup da activity.
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -54,6 +63,10 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         carregaPersonagem();
     }
 
+    /*
+        Se estiver editando personagem, carrega personagem.
+        Se estiver registrando um novo, cria personagem.
+    */
     protected void carregaPersonagem()
     {
         Intent dados = getIntent();
@@ -70,14 +83,20 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         }
     }
 
+    /*
+        Preenche os campos com as propriedades do personagem sendo editado.
+    */
     private void preencheCampos()
     {
         campoNome.setText(personagem.getNome());
         campoAltura.setText(personagem.getAltura());
         campoNascimento.setText(personagem.getNascimento());
-        //checaPermissoes();
     }
 
+    /*
+        Caso o personagem já for existente, edita seu registro.
+        Caso for novo, registra personagem.
+    */
     private void finalizarFormulario()
     {
         preencherPersonagem();
@@ -93,6 +112,10 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         finish();
     }
 
+    /*
+        Pega referências aos campos de input no XML.
+        Restringe o texto que pode ser recebido em cada campo a um formato.
+    */
     private void inicializarCampos()
     {
         campoNome = findViewById(R.id.editText_nome);
@@ -108,6 +131,9 @@ public class FormularioPersonagemActivity extends AppCompatActivity
         campoNascimento.addTextChangedListener(mtwNascimento);
     }
 
+    /*
+        Preenche as propriedades do personagem sendo editado com o conteúdo dos campos de input.
+    */
     private void preencherPersonagem()
     {
         String nome = campoNome.getText().toString();

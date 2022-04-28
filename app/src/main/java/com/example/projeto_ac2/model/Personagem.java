@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 
+/*
+    Classe define um personagem.
+    Tem um constructor e funções para manipular as variáveis.
+*/
 public class Personagem implements Serializable
 {
     private String nome;
